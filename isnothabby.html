@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บอกความรู้สึกให้แฟน</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600&family=Noto+Sans+Thai:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-bg: #FAFAF8;
+    --color-surface: #FFFFFF;
+    --color-surface-2: #F5F4F0;
+    --color-border: rgba(0,0,0,0.1);
+    --color-border-hover: rgba(0,0,0,0.22);
+    --color-text: #1A1A18;
+    --color-text-2: #6B6A65;
+    --color-text-3: #A8A7A2;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1A1A18;
+      --color-surface: #252523;
+      --color-surface-2: #2E2E2C;
+      --color-border: rgba(255,255,255,0.1);
+      --color-border-hover: rgba(255,255,255,0.22);
+      --color-text: #F0EFE8;
+      --color-text-2: #9E9D98;
+      --color-text-3: #6B6A65;
+    }
+  }
+
+  body {
+    font-family: 'Noto Sans Thai', sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-top: 1rem;
+  }
+
+  .header .title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+  }
+
+  .header .sub {
+    font-size: 14px;
+    color: var(--color-text-2);
+    font-weight: 300;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 10px;
+  }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .mood-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    gap: 6px;
+  }
+
+  .mood-btn:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-2);
+  }
+
+  .mood-btn.selected { border-width: 2px; }
+
+  .mood-btn .emoji { font-size: 26px; line-height: 1; }
+
+  .mood-btn .label {
+    font-size: 11px;
+    color: var(--color-text-2);
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .mood-btn.selected .label { font-weight: 500; }
+
+  .m-happy.selected  { border-color: #E09E1A; background: #FFF8E0; }
+  .m-happy.selected .label { color: #7A5800; }
+  .m-love.selected   { border-color: #D94F6E; background: #FFF0F4; }
+  .m-love.selected .label { color: #8C1F3A; }
+  .m-miss.selected   { border-color: #3A87D9; background: #EBF4FF; }
+  .m-miss.selected .label { color: #0C447C; }
+  .m-sad.selected    { border-color: #7B69CE; background: #F3F1FE; }
+  .m-sad.selected .label { color: #3C3489; }
+  .m-angry.selected  { border-color: #D85A30; background: #FFF0EB; }
+  .m-angry.selected .label { color: #4A1B0C; }
+  .m-nervous.selected{ border-color: #C97B00; background: #FDF4E0; }
+  .m-nervous.selected .label { color: #633806; }
+  .m-tired.selected  { border-color: #888780; background: #F5F4F0; }
+  .m-tired.selected .label { color: #2C2C2A; }
+  .m-proud.selected  { border-color: #2A9466; background: #E8FAF2; }
+  .m-proud.selected .label { color: #085041; }
+
+  .intensity-row { margin-bottom: 2rem; }
+
+  .intensity-track {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .dot {
+    flex: 1;
+    height: 8px;
+    border-radius: 99px;
+    background: var(--color-surface-2);
+    border: 0.5px solid var(--color-border);
+    cursor: pointer;
+    transition: background 0.1s, transform 0.1s;
+  }
+
+  .dot:hover { transform: scaleY(1.4); }
+
+  .context-row { margin-bottom: 2rem; }
+
+  .context-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .chip {
+    padding: 7px 16px;
+    border-radius: 99px;
+    border: 0.5px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 13px;
+    color: var(--color-text-2);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  .chip:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-text);
+  }
+
+  .chip.active {
+    background: #EBF4FF;
+    border-color: #3A87D9;
+    color: #0C447C;
+    font-weight: 500;
+  }
+
+  .note-row { margin-bottom: 2rem; }
+
+  .note-row textarea {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border);
+    background: var(--color-surface);
+    padding: 12px 16px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px;
+    color: var(--color-text);
+    resize: none;
+    height: 90px;
+    outline: none;
+    transition: border 0.1s;
+    margin-top: 10px;
+    display: block;
+  }
+
+  .note-row textarea:focus { border-color: var(--color-border-hover); }
+  .note-row textarea::placeholder { color: var(--color-text-3); }
+
+  .preview-card {
+    background: var(--color-surface-2);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 0.5px solid var(--color-border);
+    min-height: 80px;
+    transition: all 0.2s;
+  }
+
+  .preview-card .preview-text {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 16px;
+    color: var(--color-text);
+    line-height: 1.8;
+    font-weight: 400;
+    white-space: pre-wrap;
+  }
+
+  .preview-card .preview-placeholder {
+    font-size: 14px;
+    color: var(--color-text-3);
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .btn-copy, .btn-send {
+    padding: 13px;
+    border-radius: var(--radius-md);
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--color-border-hover);
+    transition: all 0.12s;
+  }
+
+  .btn-copy {
+    background: var(--color-surface);
+    color: var(--color-text-2);
+  }
+
+  .btn-copy:hover {
+    background: var(--color-surface-2);
+    color: var(--color-text);
+  }
+
+  .btn-send {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+  }
+
+  .btn-send:hover { opacity: 0.82; }
+  .btn-send:active { transform: scale(0.98); }
+
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: var(--color-text);
+    color: var(--color-bg);
+    font-size: 13px;
+    padding: 10px 22px;
+    border-radius: 99px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 999;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 420px) {
+    .mood-grid { grid-template-columns: repeat(4, 1fr); }
+    .mood-btn .emoji { font-size: 22px; }
+    .mood-btn .label { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">คัดลอกแล้ว!</div>
+
+<div class="wrap">
+  <div class="header">
+    <div class="title">บอกความรู้สึกให้แฟน</div>
+    <div class="sub">เลือกความรู้สึกของเราวันนี้</div>
+  </div>
+
+  <div class="section-label">รู้สึกอะไรอยู่?</div>
+  <div class="mood-grid">
+    <button class="mood-btn m-happy" data-text="มีความสุขมากเลย" onclick="selectMood(this)">
+      <span class="emoji">😊</span><span class="label">มีความสุข</span>
+    </button>
+    <button class="mood-btn m-love" data-text="รักเธอมากๆ เลยนะ" onclick="selectMood(this)">
+      <span class="emoji">🥰</span><span class="label">รักเธอ</span>
+    </button>
+    <button class="mood-btn m-miss" data-text="คิดถึงเธอมากเลย" onclick="selectMood(this)">
+      <span class="emoji">💭</span><span class="label">คิดถึง</span>
+    </button>
+    <button class="mood-btn m-sad" data-text="เศร้าหน่อยวันนี้" onclick="selectMood(this)">
+      <span class="emoji">🥺</span><span class="label">เศร้า</span>
+    </button>
+    <button class="mood-btn m-angry" data-text="หงุดหงิดอยู่นิดหน่อย" onclick="selectMood(this)">
+      <span class="emoji">😤</span><span class="label">หงุดหงิด</span>
+    </button>
+    <button class="mood-btn m-nervous" data-text="กังวลอยู่เล็กน้อย" onclick="selectMood(this)">
+      <span class="emoji">😰</span><span class="label">กังวล</span>
+    </button>
+    <button class="mood-btn m-tired" data-text="เหนื่อยมากวันนี้" onclick="selectMood(this)">
+      <span class="emoji">😮‍💨</span><span class="label">เหนื่อย</span>
+    </button>
+    <button class="mood-btn m-proud" data-text="ภูมิใจในตัวเองมากเลย" onclick="selectMood(this)">
+      <span class="emoji">🌟</span><span class="label">ภูมิใจ</span>
+    </button>
+  </div>
+
+  <div class="intensity-row">
+    <div class="section-label">ระดับความรู้สึก — <span id="intensity-label">กลางๆ</span></div>
+    <div class="intensity-track" id="intensity-track"></div>
+  </div>
+
+  <div class="context-row">
+    <div class="section-label">บอกเพิ่มเติม (ไม่บังคับ)</div>
+    <div class="context-chips">
+      <button class="chip" onclick="toggleChip(this)">อยากเจอเธอ</button>
+      <button class="chip" onclick="toggleChip(this)">ขอบคุณที่อยู่ข้างๆ</button>
+      <button class="chip" onclick="toggleChip(this)">ฝันถึงเธอ</button>
+      <button class="chip" onclick="toggleChip(this)">อยากกอด</button>
+      <button class="chip" onclick="toggleChip(this)">ต้องการกำลังใจ</button>
+      <button class="chip" onclick="toggleChip(this)">แค่อยากบอก</button>
+    </div>
+  </div>
+
+  <div class="note-row">
+    <div class="section-label">เพิ่มข้อความพิเศษ</div>
+    <textarea id="note" placeholder="เขียนอะไรก็ได้ที่อยากบอก..." oninput="updatePreview()"></textarea>
+  </div>
+
+  <div class="section-label" style="margin-bottom: 8px;">ตัวอย่างข้อความ</div>
+  <div class="preview-card">
+    <div id="preview-text" class="preview-placeholder">เลือกความรู้สึกก่อนเลยนะ 💌</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-copy" onclick="copyMessage()">คัดลอกข้อความ</button>
+    <button class="btn-send" onclick="shareMessage()">แชร์ข้อความ</button>
+  </div>
+</div>
+
+<script>
+  let selectedMood = null;
+  let intensity = 5;
+  let activeChips = [];
+
+  const intensityLabels = ['นิดเดียว','น้อยมาก','นิดหน่อย','พอควร','กลางๆ','ค่อนข้างมาก','มากทีเดียว','มากเลย','มากมาย','มากที่สุดเลย'];
+
+  const track = document.getElementById('intensity-track');
+  for (let i = 1; i <= 10; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.dataset.val = i;
+    d.onclick = () => setIntensity(i);
+    track.appendChild(d);
+  }
+
+  function setIntensity(val) {
+    intensity = val;
+    document.getElementById('intensity-label').textContent = intensityLabels[val - 1];
+    document.querySelectorAll('.dot').forEach(d => {
+      const v = parseInt(d.dataset.val);
+      d.style.background = v <= val ? 'var(--color-text-2)' : '';
+      d.style.border = v <= val ? '0.5px solid transparent' : '';
+    });
+    updatePreview();
+  }
+
+  setIntensity(5);
+
+  function selectMood(btn) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMood = btn;
+    updatePreview();
+  }
+
+  function toggleChip(chip) {
+    chip.classList.toggle('active');
+    const ctx = chip.textContent.trim();
+    if (chip.classList.contains('active')) {
+      activeChips.push(ctx);
+    } else {
+      activeChips = activeChips.filter(c => c !== ctx);
+    }
+    updatePreview();
+  }
+
+  function buildMessage() {
+    if (!selectedMood) return null;
+    let msg = selectedMood.dataset.text;
+    if (intensity >= 8) {
+      msg = msg.replace('มากๆ', 'มากมายเลย').replace('มากเลย', 'มากมายเลยนะ');
+    }
+    if (intensity <= 3) {
+      msg = msg.replace('มากๆ', 'อยู่นิดหน่อย').replace('มากเลย', 'บ้างนะ').replace('มาก', 'นิดหน่อย');
+    }
+    if (activeChips.length) msg += ' ' + activeChips.join(' ');
+    const note = document.getElementById('note').value.trim();
+    if (note) msg += '\n\n' + note;
+    return msg;
+  }
+
+  function updatePreview() {
+    const el = document.getElementById('preview-text');
+    const msg = buildMessage();
+    if (msg) {
+      el.className = 'preview-text';
+      el.textContent = msg;
+    } else {
+      el.className = 'preview-placeholder';
+      el.textContent = 'เลือกความรู้สึกก่อนเลยนะ 💌';
+    }
+  }
+
+  function showToast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function copyMessage() {
+    const msg = buildMessage();
+    if (!msg) { showToast('เลือกความรู้สึกก่อนนะ'); return; }
+    navigator.clipboard.writeText(msg).then(() => showToast('คัดลอกแล้ว! 💌'));
+  }
+
+  function shareMessage() {
+    const msg = buildMessage();
+    if (!msg) { showToast('เลือกความรู้สึกก่อนนะ'); return; }
+    if (navigator.share) {
+      navigator.share({ text: msg });
+    } else {
+      navigator.clipboard.writeText(msg).then(() => showToast('คัดลอกแล้ว! ส่งได้เลย 💌'));
+    }
+  }
+</script>
+</body>
+</html>
