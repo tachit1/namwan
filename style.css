@@ -87,7 +87,7 @@
     }
  
     .count-number {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display',serif; 
       font-size: clamp(120px, 25vw, 220px);
       color: transparent;
       background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
@@ -122,13 +122,19 @@
       flex-direction: column;
       z-index: 50;
     }
+    @font-face {
+  font-family: 'AlexBrush';
+  src: url('tesh/CormorantGaramond-Italic-VariableFont_wght.ttf') format('truetype');
+    }
+
+    
  
     /* ===== TEXT WORDS ===== */
     .word-reveal {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display',serif; 
       font-size: clamp(52px, 10vw, 110px);
       color: transparent;
       background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--rose-light) 100%);
@@ -150,7 +156,7 @@
  
     .word-reveal.name-word {
       font-size: clamp(60px, 12vw, 130px);
-      font-style: italic;
+      font-style: 'Playfair Display',serif; 
     }
  
     /* ===== CAKE ===== */
@@ -606,3 +612,33 @@
     .letter-card::-webkit-scrollbar { width: 4px; }
     .letter-card::-webkit-scrollbar-track { background: transparent; }
     .letter-card::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }
+    
+.love {
+    
+ margin-top: 28px;
+      font-family: 'Playfair Display', serif;
+  bottom: 20px;
+  left: 20px; /* เปลี่ยนตรงนี้ */
+}
+
+.love a {
+  padding: 12px 25px;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(45deg, #ff4d6d, #ff758f);
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(255,77,109,.5);
+  transition: .2s;
+}
+
+.love a:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 25px rgba(255,77,109,.7);
+}
+  .photo img {
+    width: 100px;
+    height: 100px;        /* กำหนดสูงเท่ากันหมด */
+    object-fit: cover;    /* ครอปให้พอดีโดยไม่ยืด */
+    border-radius: 8px;   /* มุมโค้งนิดหน่อย */
+  }
